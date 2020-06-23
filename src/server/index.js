@@ -66,8 +66,10 @@ const currentWeatherURL = "https://api.weatherbit.io/v2.0/current?city=[CITY]&ke
 const pixabayApiKey = process.env.PixaBay_API_KEY;
 const pixBayURL = "https://pixabay.com/api/?key=[KEY]&q=[CITY]&image_type=photo&pretty=true&category=places";
 
+
+// GET Routs
 app.get("/geonames", (req, res) => {
-  const url = goeNameUrl.replace("[CITY]", projectData.city); 
+  const url = goeNameUrl.replace("[CITY]", valueData.city); 
   console.log(url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
@@ -78,7 +80,7 @@ app.get("/geonames", (req, res) => {
 });
 
 app.get("/weatherbit", (req, res) => {
-  const url = futureWeatherURL.replace("[CITY]", projectData.city).replace("[KEY]", weatherApiKey).replace("[DAYS]", projectData.days);
+  const url = futureWeatherURL.replace("[CITY]", valueData.city).replace("[KEY]", weatherApiKey).replace("[DAYS]", valueData.days);
   console.log(url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
@@ -87,11 +89,10 @@ app.get("/weatherbit", (req, res) => {
     res.json(JSON.parse(body));
   });
 });
-
 
 app.get("/pixabay", (req, res) => {
-  const url = pixBayURL.replace("[CITY]", projectData.city).replace("[KEY]", pixabayApiKey);
-  console.log(url);
+  const url = pixBayURL.replace("[CITY]", valueData.city).replace("[KEY]", pixabayApiKey);
+  console.log("pixabay url: " + url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
       return res.status(500).json({ type: "error", message: error });
@@ -100,33 +101,39 @@ app.get("/pixabay", (req, res) => {
   });
 });
 
+app.get('/all', getData);
+
+function getData (request, response) {
+  response.send(projectData);
+  const test = JSON.stringify(projectData);
+  console.log("server post allData: " + projectData);
+  console.log("server post allData JSON: " + test);
+};
 
 
+valueData = {};
 
-app.post('/getInfo', getTrip);
+// POST
+app.post('/valuePost', getValues);
 
-function getTrip(req,res){
+function getValues(req,res){
   const test1 = JSON.stringify(req.body);
     console.log("getTrip1: " + test1);
     newEntry = {
       city: req.body.city,
       days: req.body.days
     }
-    projectData = newEntry;
-    res.send(projectData);
+    valueData = newEntry;
+    res.send(valueData);
 
-    const test = JSON.stringify(projectData);
+    const test = JSON.stringify(valueData);
 
     console.log("server post: " + test);
 }
 
+app.post('/postTrip', postTrip);
 
-
-
-
-app.post('/getTrip', getTrip);
-
-function getTrip(req,res){
+function postTrip(req,res){
   const test1 = JSON.stringify(req.body);
     console.log("getTrip1: " + test1);
     newEntry = {
@@ -147,32 +154,5 @@ function getTrip(req,res){
     console.log("server post2: " + test);
 }
 
-// Get rout for CORS
 
 
-app.get('/pixBay', (req, res) => {
-
-  const pixabayApiKey = "17163729-cdee9600c3a4a8f5a8abaad0e";
-  const pixBayURL = "https://pixabay.com/api/?key=[KEY]&q=Atlanta&image_type=photo&pretty=true&category=places";
-  const imgURL = pixBayURL.replace("[KEY]", pixabayApiKey);
-
-  console.log("pixBay url: " + imgURL);
-
-  request({ url: pixBayURL }, (error, response, body) => {
-    if (error || response.statusCode !== 200) {
-      return res.status(500).json({ type: "error", message: error });
-    }
-    res.json(JSON.parse(body));
-  });
-});
-
-
-
-// GET route - Add a GET route that returns the projectData object
-app.get('/all', getData);
-
-function getData (request, response) {
-  response.send(projectData);
- // const test = JSON.stringify(projectData);
-  console.log("server post2: " + projectData);
-};
