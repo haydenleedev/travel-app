@@ -1,20 +1,21 @@
-# Evaluate a news article with Natural Language Processing
+# Travel Planner
 
-This project requires you to build a web tool that allows users to run Natural Language Processing (NLP) on articles or blogs found on other websites.
+This project requires you to build out a travel app that, at a minimum, obtains a desired trip location & date from the user, and displays weather and an image of the location using information obtained from external APIs.
 
 
-## Getting started
+## How to Install
 
-It would probably be good to first get your basic project setup and functioning. Follow the steps from the course up to Lesson 4 but don't add Service Workers just yet. We won't need the service workers during development and having extra caches floating around just means there's more potential for confusion. So, fork this repo and begin your project setup.
-
-Remember that once you clone, you will still need to install everything:
-
-`cd` into your new folder and run:
-- `npm install`
+* Get webpack set up to work with this project.
+* Dev execution: npm run build-dev
+* Production execution: npm run build-prod
 
 ### API
-[Aylien API](https://developer.aylien.com/signup) has been used for this project.
-The app should make a successful call to the api on form submission.
+[goName API](http://www.geonames.org/export/web-services.html), 
+[Weatherbit API](https://www.weatherbit.io/account/create), and
+[Pixabay API](https://pixabay.com/api/docs/) has been used for this project.
+
+### Extend the Project
+* Pull in an image for the country from Pixabay API when the entered location brings up no results
 
 ### Service Worker
 The project has set up service workers in webpack.
