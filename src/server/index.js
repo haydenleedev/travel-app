@@ -68,6 +68,29 @@ const pixBayURL = "https://pixabay.com/api/?key=[KEY]&q=[CITY]&image_type=photo&
 
 
 // GET Routs
+app.get("/geonameGetCountry", (req, res) => {
+  const url = goeNameUrl.replace("[CITY]", cityValue.city);  // get response data with cityValue.city  to retrieve country name  
+  console.log("geonameGetCountry!!: " + url);
+  request({ url: url }, (error, response, body) => {
+    if (error || response.statusCode !== 200) {
+      return res.status(500).json({ type: "error", message: error });
+    }
+    res.json(JSON.parse(body));
+  });
+});
+
+app.get("/getCountry", (req, res) => {
+  const url = pixBayURL.replace("[CITY]", countryValue.countryName).replace("[KEY]", pixabayApiKey);
+  console.log("countryValue url: " + url);
+  request({ url: url }, (error, response, body) => {
+    if (error || response.statusCode !== 200) {
+      return res.status(500).json({ type: "error", message: error });
+    }
+    res.json(JSON.parse(body));
+  });
+});
+
+
 app.get("/geonames", (req, res) => {
   const url = goeNameUrl.replace("[CITY]", valueData.city); 
   console.log(url);
@@ -101,6 +124,7 @@ app.get("/pixabay", (req, res) => {
   });
 });
 
+
 app.get('/all', getData);
 
 function getData (request, response) {
@@ -121,15 +145,56 @@ function getValues(req,res){
     console.log("getTrip1: " + test1);
     newEntry = {
       city: req.body.city,
-      days: req.body.days
+      days: req.body.days,
+      countryImg: req.body.countryImg
     }
     valueData = newEntry;
     res.send(valueData);
 
     const test = JSON.stringify(valueData);
 
-    console.log("server post: " + test);
+    console.log("got countrImg: " + test);
 }
+
+
+
+
+cityValue = {};  // Get country data from geoNames
+
+app.post('/valuePostCountry', getValues2);
+
+function getValues2(req,res){
+  const test1 = JSON.stringify(req.body);
+    console.log("getTrip2: " + test1);
+    newEntry = {
+      city: req.body.city
+    }
+    cityValue = newEntry;
+    res.send(cityValue); // "city" value is stored in cityValue
+
+    const test = JSON.stringify(cityValue);  
+
+    console.log("valuePostCountry: " + test);
+}
+
+
+countryValue = {};
+app.post('/countryPost', getCountry);
+
+function getCountry(req,res){
+  const test1 = JSON.stringify(req.body);
+    newEntry = {
+      countryName:req.body.countryName
+    }
+    countryValue = newEntry;
+    res.send(countryValue); // stored country name to countryValue
+
+    const test = JSON.stringify(countryValue);  
+
+    console.log("countryPost countryName: " + test);
+}
+
+
 
 app.post('/postTrip', postTrip);
 

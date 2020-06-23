@@ -37,7 +37,7 @@ geoName:  latitude, longitude, country
 
 */
 const geoNameUserName = process.env.USERNAME;
-const goeNameUrl = "http://api.geonames.org/searchJSON?q=[CITY]&maxRows=1&username=[USERNAME]";
+const goeNameURL = "http://api.geonames.org/searchJSON?q=[CITY]&maxRows=1&username=[USERNAME]";
 // ex) http://api.geonames.org/searchJSON?q=Atlanta&maxRows=1&username=haydenlee22
 
 const weatherApiKey = process.env.Weather_API_KEY;
@@ -63,26 +63,43 @@ let finalData = {};
 
 // 1. Get data
 
-const getData = async (goeNameUrl, futureWeatherURL, pixBayURL) => {
+const getData = async (goeNameURL, futureWeatherURL, pixBayURL) => {
    
-  const response = await fetch(goeNameUrl);
+  const response = await fetch(goeNameURL);
   const response2 = await fetch(futureWeatherURL);
   const response3 = await fetch(pixBayURL);
 
-try {
-      const newData =  await response.json();
-      const newData2 =  await response2.json();
-      const newData3 =  await response3.json();
-      const totalData = {...newData, ...newData2, ...newData3 }
+  try {
+        const newData =  await response.json();
+        const newData2 =  await response2.json();
+        const newData3 =  await response3.json();
+        const totalData = {...newData, ...newData2, ...newData3 }
 
-      const test = JSON.stringify(totalData);
-  console.log("pixBayData: " + test);
-  console.log("url: " + pixBayURL);
-  return (totalData);
+        
+        const test = JSON.stringify(totalData);
+    console.log("pixBayData: " + test);
+    console.log("url: " + pixBayURL);
+    return (totalData);
 
-} catch(error) {
-  console.log("error", error);
+  } catch(error) {
+    console.log("error", error);
+  }
 }
+
+
+const getDataSingle = async (url) => {
+   
+  const response = await fetch(url);
+
+  try {
+        const newData =  await response.json();
+        const test = JSON.stringify(newData);
+    console.log("singleData: " + test);
+    return (newData);
+
+  } catch(error) {
+    console.log("error", error);
+  }
 }
 
 // 2. Post data to App
@@ -116,7 +133,7 @@ function performAction(e) {
 
     const days = dateDifference(travelDate);
 
-    const finalGeoURL = goeNameUrl.replace("[CITY]", city).replace("[USERNAME]", geoNameUserName);  
+    const finalGeoURL = goeNameURL.replace("[CITY]", city).replace("[USERNAME]", geoNameUserName);  
 
     // 3. Integrate the Weatherbit API
   //  const futureURL = futureWeatherURL.replace("[CITY]", city).replace("[KEY]", weatherApiKey).replace("[DAYS]", days);
@@ -128,22 +145,45 @@ function performAction(e) {
    // getData(finalGeoURL, futureURL, imgURL)
 
 
-   postData('http://localhost:8081/valuePost', {city: city, days: days})
-   .then( (res) => {
-    return getData('http://localhost:8081/geonames', 'http://localhost:8081/weatherbit', 'http://localhost:8081/pixabay');
+   postData('http://localhost:8081/valuePostCountry', {city: city}) // add : cityValue -  "city" value is stored in cityValue
+   .then( (data) => {
+    return getDataSingle('http://localhost:8081/geonameGetCountry'); // add : cityValue - get response data with cityValue.city to retrieve country name 
+   })
+   .then( (data) => {
+       postData('http://localhost:8081/countryPost', {countryName:data.geonames[0].countryName}); // get data from : countryValue - post country name data to countryPost to query country image from pixBay.
+   })
+   .then( () => {
+
+    postData('http://localhost:8081/valuePost', {city: city, days: days});  // add : valuData
+  })
+   .then( (data) => {
+    let d = JSON.stringify(data);
+    let test = console.log("Coco: " + d);
+
+    return getData('http://localhost:8081/geonames', 'http://localhost:8081/weatherbit', 'http://localhost:8081/pixabay'); // get data from : valuData
    })
 	.then((data) => {
 
-    console.log("POST test: " + data.data[0].weather.description);
+        console.log("POST test: " + data.data[0].weather.description);
         let test = JSON.stringify(data);
             
-            console.log("data.hits[0].webformatURL: " + test);
+            console.log("country img?: " + test);
 
-        let imgResult = ((data.hits[0] == null) ||  (typeof data.hits[0] == 'undefined')) ? placeHolderImg : data.hits[0].webformatURL;
+           let imgResult = ((data.hits[0] == null) ||  (typeof data.hits[0] == 'undefined')) ? placeHolderImg : data.hits[0].webformatURL;
+          //  document.querySelector(".preview-img").setAttribute("src", imgResult);
 
-            postData('http://localhost:8081/postTrip', {lng:data.geonames[0].lng, lat:data.geonames[0].lat, countryName:data.geonames[0].countryName, description:data.data[0].weather.description, temp:data.data[0].temp, city: city, days: days, img: imgResult});
+          if ( (data.hits[0] != null) || ( typeof data.hits[0] != 'undefined')) {
+            postData('http://localhost:8081/postTrip', {lng:data.geonames[0].lng, lat:data.geonames[0].lat, countryName:data.geonames[0].countryName, description:data.data[0].weather.description, temp:data.data[0].temp, city: city, days: days, img: data.hits[0].webformatURL});  // add : projectData
+          } else {
+
+              getData('http://localhost:8081/geonames', 'http://localhost:8081/weatherbit', 'http://localhost:8081/getCountry')
+              .then ( (data) => {
+                postData('http://localhost:8081/postTrip', {lng:data.geonames[0].lng, lat:data.geonames[0].lat, countryName:data.geonames[0].countryName, description:data.data[0].weather.description, temp:data.data[0].temp, city: city, days: days, img: data.hits[0].webformatURL});  // add : projectData
+              }) 
+          }
+           
     })
-    .then(() => updateUI());
+    .then(() => updateUI());  // get data from: projetData
 
 }
 
@@ -178,11 +218,12 @@ const updateUI = async () => {
 	try {
 		const allData = await request.json();
 
-        const test = JSON.stringify(allData);
-        console.log("allData: " + allData);
-        console.log("allData JSON: " + test);
+      //  const test = JSON.stringify(allData);
+      //  console.log("allData: " + allData);
+      //  console.log("allData JSON: " + test);
 
-       document.querySelector(".preview-img").setAttribute("src", allData.img);
+    document.querySelector(".preview-img").setAttribute("src", allData.img);
+     
 		document.getElementById("entryHolder").innerHTML =`<p class="overview">${allData.city}, ${allData.countryName} is ${allData.days} days away.</p>
 		
 		<p class="overview">Typical weather for then is:</p>
@@ -196,4 +237,25 @@ const updateUI = async () => {
 
 	}
 }
+
+const updateImg = async () => {
+	const request = await fetch('hhttp://localhost:8081/getCountry');
+
+	try {
+		const allData = await request.json();
+
+      //  const test = JSON.stringify(allData);
+      //  console.log("allData: " + allData);
+      //  console.log("allData JSON: " + test);
+
+    let imgResult = ((data.hits[0] == null) ||  (typeof data.hits[0] == 'undefined')) ? placeHolderImg : data.hits[0].webformatURL;
+    document.querySelector(".preview-img").setAttribute("src", imgResult);
+		
+
+	} catch (error) {
+		console.log("error", error);
+
+	}
+}
+
 
