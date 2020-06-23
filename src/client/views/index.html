@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Weather Journal</title>
+<link href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
+</head>
+ <body>
+  <header>
+    <h1>Travel Planner</h1>
+  </header>
+
+  <main>
+
+    <div class="outer-wrap">
+
+    <div class="img-wrap"><div id="img"></div></div>
+    
+
+    <div class="form-wrap">
+            <div class ="holder city">
+                <label for="city">Enter city here</label>
+                <input type="text" id="city" placeholder="enter city code here">
+            </div>
+
+            <div class ="holder date">
+                <label for="date">Select Date</label>
+                <input class= "myInput" type="date" name="date" value="" id="date" placeholder="Date" min="2020-06-22" required>
+                <button id="save" type = "submit">save trip</button> <button id="remove" type = "submit">remove trip</button>
+            </div>
+
+            <div class ="entry">
+                <div id = "entryHolder">
+                        
+                </div>
+            </div>
+    </div>
+
+</div> <!-- div.outer-wrap-->
+
+</main>
+
+</body>
+</html>
