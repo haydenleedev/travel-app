@@ -12,6 +12,9 @@ This project requires you to build out a travel app that, at a minimum, obtains 
 [Weatherbit API](https://www.weatherbit.io/account/create), and
 [Pixabay API](https://pixabay.com/api/docs/) has been used for this project.
 
+### Extend the Project
+* Pull in an image for the country from Pixabay API when the entered location brings up no results
+
 ### Service Worker
 The project has set up service workers in webpack.
 
