@@ -15,7 +15,6 @@ export {
 <Output Fields>
 
 geoName:  latitude, longitude, country
-
 1. City & Country
 2. The trip to ** is ** days away.
 3. Typical weather for then is:
@@ -26,27 +25,12 @@ geoName:  latitude, longitude, country
 * The weather data array was named differently, what do we need to change the name to?
 * The weather data only had 1 object in the array, the geoname api outputs multiple objects. How do we call the first object?
 
-
 *** geneName API Url ex): http://api.geonames.org/searchJSON?q=cities&maxRows=1&username=haydenlee22
-
 *** weatherBit Current API URL ex) https://api.weatherbit.io/v2.0/current?city=Raleigh,NC&key=API_KEY
-
 *** weatherBit Future API URL ex) https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY&days=[integer]
-
 ** Pixabay API url ex) https://pixabay.com/api/?key=17163729-cdee9600c3a4a8f5a8abaad0e&q=yellow+flowers&image_type=photo&pretty=true
 
 */
-const geoNameUserName = process.env.USERNAME;
-const goeNameURL = "http://api.geonames.org/searchJSON?q=[CITY]&maxRows=1&username=[USERNAME]";
-// ex) http://api.geonames.org/searchJSON?q=Atlanta&maxRows=1&username=haydenlee22
-
-const weatherApiKey = process.env.Weather_API_KEY;
-const futureWeatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?city=[CITY]&key=[KEY]&days=[DAYS]";
-const currentWeatherURL = "https://api.weatherbit.io/v2.0/current?city=[CITY]&key=[KEY]";
-
-const pixabayApiKey = process.env.PixaBay_API_KEY;
-const pixBayURL = "https://pixabay.com/api/?key=[KEY]&q=[CITY]&image_type=photo&pretty=true&category=places";
-
 
 // Default Image
 const defaultImg = new Image();
@@ -133,17 +117,7 @@ function performAction(e) {
 
     const days = dateDifference(travelDate);
 
-    const finalGeoURL = goeNameURL.replace("[CITY]", city).replace("[USERNAME]", geoNameUserName);  
-
-    // 3. Integrate the Weatherbit API
-  //  const futureURL = futureWeatherURL.replace("[CITY]", city).replace("[KEY]", weatherApiKey).replace("[DAYS]", days);
-   // const currentURL = currentWeatherURL.replace("[CITY]", city).replace("[KEY]", weatherApiKey);
-
-    // Integrate with pixabay
-    //const imgURL = pixBayURL.replace("[CITY]", city).replace("[KEY]", pixabayApiKey);
-  
-   // getData(finalGeoURL, futureURL, imgURL)
-
+   // const finalGeoURL = goeNameURL.replace("[CITY]", city).replace("[USERNAME]", geoNameUserName);  
 
    postData('http://localhost:8081/valuePostCountry', {city: city}) // add : cityValue -  "city" value is stored in cityValue
    .then( (data) => {
@@ -218,10 +192,6 @@ const updateUI = async () => {
 	try {
 		const allData = await request.json();
 
-      //  const test = JSON.stringify(allData);
-      //  console.log("allData: " + allData);
-      //  console.log("allData JSON: " + test);
-
     document.querySelector(".preview-img").setAttribute("src", allData.img);
      
 		document.getElementById("entryHolder").innerHTML =`<p class="overview">${allData.city}, ${allData.countryName} is ${allData.days} days away.</p>
@@ -231,26 +201,6 @@ const updateUI = async () => {
         <p>${allData.description}°.</p>
 		
 		</div>`
-
-	} catch (error) {
-		console.log("error", error);
-
-	}
-}
-
-const updateImg = async () => {
-	const request = await fetch('hhttp://localhost:8081/getCountry');
-
-	try {
-		const allData = await request.json();
-
-      //  const test = JSON.stringify(allData);
-      //  console.log("allData: " + allData);
-      //  console.log("allData JSON: " + test);
-
-    let imgResult = ((data.hits[0] == null) ||  (typeof data.hits[0] == 'undefined')) ? placeHolderImg : data.hits[0].webformatURL;
-    document.querySelector(".preview-img").setAttribute("src", imgResult);
-		
 
 	} catch (error) {
 		console.log("error", error);
