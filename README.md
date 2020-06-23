@@ -6,6 +6,8 @@ This project requires you to build out a travel app that, at a minimum, obtains 
 ## How to Install
 
 * Get webpack set up to work with this project.
+* Dev execution: npm run build-dev
+* Production execution: npm run build-prod
 
 ### API
 [goName API](http://www.geonames.org/export/web-services.html), 
