@@ -8,8 +8,8 @@ This project requires you to build out a travel app that, at a minimum, obtains 
 * Get webpack set up to work with this project.
 
 ### API
-[goName API](http://www.geonames.org/export/web-services.html) has been used for this project.
-[Weatherbit API](https://www.weatherbit.io/account/create) has been used for this project.
+[goName API](http://www.geonames.org/export/web-services.html), 
+[Weatherbit API](https://www.weatherbit.io/account/create), and
 [Pixabay API](https://pixabay.com/api/docs/) has been used for this project.
 
 ### Service Worker
