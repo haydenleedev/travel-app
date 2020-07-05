@@ -1,54 +1,49 @@
-form {
-    border: 1px solid $darkGray ;
-    border-radius: 3px;
-    padding: 40px;
-}
 .holder {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 button {
-    font-size: 16px;
-    padding: 5px 20px;
-    border-radius: 5px;
+  font-size: 16px;
+  padding: 5px 20px;
+  border-radius: 5px;
 }
 
 #save {
-    background-color: darkgreen;
-    color: #fff;
+  background-color: darkgreen;
+  color: #fff;
 }
 
 #remove {
-    background-color: white;
-    color: #000;
+  background-color: white;
+  color: #000;
 }
 
 input {
-    font-size:18px;
-    padding: 10px 20px;
-    width: 100%;
-    line-height: 16px;
-    margin: 10px 0;
+  font-size: 18px;
+  padding: 10px 20px;
+  width: 100%;
+  line-height: 16px;
+  margin: 10px 0;
 
-    &[type="submit"] {
-        background-color: $lightGray;
-        border: 1px solid $darkGray;
-    }
-    &[type="submit"]:hover {
-        background-color: $lightGrayHover;
-    }
+  &[type='submit'] {
+    background-color: $lightGray;
+    border: 1px solid $darkGray;
+  }
+  &[type='submit']:hover {
+    background-color: $lightGrayHover;
+  }
 }
 
 #error {
-    color: $red;
+  color: $red;
 }
 .form-results {
-    font-weight:600;
-    font-size: 18px;
-    margin-bottom:10px;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 #results p {
-    font-size: 16px;
-    font-weight:600;
-    line-height:2;
-    color: $green;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 2;
+  color: $green;
 }

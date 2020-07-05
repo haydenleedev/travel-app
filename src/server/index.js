@@ -5,16 +5,13 @@ dotenv.config();
 projectData = {};
 
 // Require Express to run server and routes
+var path = require('path')
 const express = require('express');
+const mockAPIResponse = require('./mockAPI.js')
 const request = require('request');
 
 // Start up an instance of app
 const app = express();
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-})
 
 /* Middleware*/
 const bodyParser = require('body-parser');
@@ -28,18 +25,23 @@ const cors = require('cors');
 app.use(cors());
 
 // Initialize the main project folder
-app.use(express.static('website'));
+app.use(express.static('dist'))
 
+console.log(__dirname)
+
+app.get('/', function (req, res) {
+    res.sendFile('dist/index.html')
+})
 
 // Setup Server
 
-const port = 8081;
+const port = 8888;
 
 const server = app.listen(port, listening);
 
 function listening() {
 	console.log("server running");
-	console.log(`running on localhose: ${port}`);
+	console.log(`running on localhost: ${port}`);
 }
 
 
@@ -81,7 +83,7 @@ app.get("/geonameGetCountry", (req, res) => {
 
 app.get("/getCountry", (req, res) => {
   const url = pixBayURL.replace("[CITY]", countryValue.countryName).replace("[KEY]", pixabayApiKey);
-  console.log("countryValue url: " + url);
+ // console.log("countryValue url: " + url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
       return res.status(500).json({ type: "error", message: error });
@@ -93,7 +95,7 @@ app.get("/getCountry", (req, res) => {
 
 app.get("/geonames", (req, res) => {
   const url = goeNameUrl.replace("[CITY]", valueData.city); 
-  console.log(url);
+  //console.log(url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
       return res.status(500).json({ type: "error", message: error });
@@ -104,7 +106,7 @@ app.get("/geonames", (req, res) => {
 
 app.get("/weatherbit", (req, res) => {
   const url = futureWeatherURL.replace("[CITY]", valueData.city).replace("[KEY]", weatherApiKey).replace("[DAYS]", valueData.days);
-  console.log(url);
+  //console.log(url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
       return res.status(500).json({ type: "error", message: error });
@@ -115,7 +117,7 @@ app.get("/weatherbit", (req, res) => {
 
 app.get("/pixabay", (req, res) => {
   const url = pixBayURL.replace("[CITY]", valueData.city).replace("[KEY]", pixabayApiKey);
-  console.log("pixabay url: " + url);
+ // console.log("pixabay url: " + url);
   request({ url: url }, (error, response, body) => {
     if (error || response.statusCode !== 200) {
       return res.status(500).json({ type: "error", message: error });
@@ -130,8 +132,8 @@ app.get('/all', getData);
 function getData (request, response) {
   response.send(projectData);
   const test = JSON.stringify(projectData);
-  console.log("server post allData: " + projectData);
-  console.log("server post allData JSON: " + test);
+  console.log("server post allData: " + test);
+  //console.log("server post allData JSON: " + test);
 };
 
 
@@ -142,7 +144,7 @@ app.post('/valuePost', getValues);
 
 function getValues(req,res){
   const test1 = JSON.stringify(req.body);
-    console.log("getTrip1: " + test1);
+    //console.log("getTrip1: " + test1);
     newEntry = {
       city: req.body.city,
       days: req.body.days,
@@ -165,7 +167,7 @@ app.post('/valuePostCountry', getValues2);
 
 function getValues2(req,res){
   const test1 = JSON.stringify(req.body);
-    console.log("getTrip2: " + test1);
+   // console.log("getTrip2: " + test1);
     newEntry = {
       city: req.body.city
     }
@@ -174,7 +176,7 @@ function getValues2(req,res){
 
     const test = JSON.stringify(cityValue);  
 
-    console.log("valuePostCountry: " + test);
+    //console.log("valuePostCountry: " + test);
 }
 
 
@@ -200,7 +202,7 @@ app.post('/postTrip', postTrip);
 
 function postTrip(req,res){
   const test1 = JSON.stringify(req.body);
-    console.log("getTrip1: " + test1);
+    //console.log("getTrip1: " + test1);
     newEntry = {
       lng: req.body.lng,
       lat: req.body.lat,
@@ -216,7 +218,7 @@ function postTrip(req,res){
 
     const test = JSON.stringify(projectData);
 
-    console.log("server post2: " + test);
+    //console.log("server post2: " + test);
 }
 
 

@@ -1,54 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Weather Journal</title>
-<link href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
-</head>
- <body>
-  <header>
-    <h1>Travel Planner</h1>
-  </header>
+  <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src *;
+    img-src * 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
+    style-src 'self' 'unsafe-inline' *"
+    />
+    <meta charset="UTF-8" />
+    <title>Weather Journal</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Travel Planner</h1>
+    </header>
 
-  <main>
+    <main>
+      <div class="outer-wrap">
+        <div class="img-wrap"><div id="img"></div></div>
 
-    <div class="outer-wrap">
-
-    <div class="img-wrap"><div id="img"></div></div>
-    
-
-    <div class="form-wrap">
-            <div class ="holder city">
-                <label for="city">Enter city here</label>
-                <input type="text" id="city" placeholder="enter city code here">
+        <div class="form-wrap">
+          <form onsubmit="return Client.handleSubmit(event)">
+            <div class="holder city">
+              <label for="city">Enter city here</label>
+              <input type="text" id="city" placeholder="enter city code here" />
             </div>
 
-            <div class ="holder date">
-                <label for="date">Select Date</label>
-                <input class= "myInput" type="date" name="date" value="" id="date" placeholder="Date" min="2020-06-22" required>
-                <button id="save" type = "submit">save trip</button> <button id="remove" type = "submit">remove trip</button>
+            <div class="holder date">
+              <label for="date">Select Date</label>
+              <input
+                class="myInput"
+                type="date"
+                name="date"
+                value=""
+                id="date"
+                placeholder="Date"
+                min="2020-06-22"
+                required
+              />
+              <button
+                id="save"
+                type="submit"
+                name=""
+                onclick="return Client.handleSubmit(event)"
+                onsubmit="return Client.handleSubmit(event)"
+              >
+                save trip
+              </button>
+              <button id="remove" type="submit">remove trip</button>
             </div>
+          </form>
 
-            <div class ="entry">
-                <div id = "entryHolder">
-                        
-                </div>
-            </div>
-    </div>
-
-</div> <!-- div.outer-wrap-->
-
-</main>
-
-<script>
-    // Check that service workers are supported
-    if ('serviceWorker' in navigator) {
-        // Use the window load event to keep the page load performant
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js');
-        });
-    }
-   </script>
-
-</body>
+          <div class="entry">
+            <div id="entryHolder"></div>
+          </div>
+        </div>
+      </div>
+      <!-- div.outer-wrap-->
+    </main>
+  </body>
 </html>
